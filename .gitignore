@@ -1,0 +1,9 @@
+node_modules/
+.wrangler/
+.dev.vars
+.env
+# Leena's performance data is confidential: keep it out of the repo
+data/*.json
+data/*.xlsx
+reports/
+submission/

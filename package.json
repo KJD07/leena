@@ -1,0 +1,19 @@
+{
+  "name": "landing-page-grader",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "validate": "node scripts/validate.mjs",
+    "import-data": "node scripts/import-xlsx.mjs"
+  },
+  "dependencies": {
+    "node-html-parser": "^6.1.13"
+  },
+  "devDependencies": {
+    "wrangler": "^4.154.0",
+    "xlsx": "^0.18.5"
+  }
+}
