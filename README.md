@@ -18,7 +18,7 @@ URL ──► fetchPage ──► extractFacts ──► detectAudience ──�
 |---|---|
 | `src/fetchPage.js` | URL normalisation, private-address blocking, fetch with timeout and size cap |
 | `src/extract.js` | HTML → facts: headings, hero, CTAs (with intent), sticky header, forms, logos, testimonials, compliance badges, stats, readability, gating |
-| `src/psi.js` | PageSpeed Insights (mobile): performance score, LCP, CLS, TBT, FCP, field data |
+| `src/psi.js` | PageSpeed Insights (mobile): 3 Lighthouse runs in parallel (median + each run), plus real-user (CrUX) LCP and CLS for the URL |
 | `src/audience.js` | Evidence-based audience detection with per-point explanations |
 | `src/rubric.js` | Signal library plus rubric **v1** (first draft, kept unchanged) and **v2** (after validation) |
 | `src/grade.js` | Orchestration |
@@ -80,4 +80,5 @@ PSI_API_KEY=your-key npm run validate     # writes reports/validation.md
 
 - Forms and content that render only after JavaScript runs aren't visible in static HTML. The grader infers gating (a script button with no player or file on the page) but can't count those fields. Cloudflare Browser Rendering would close this gap.
 - The grader can't see where traffic comes from, so it rates the page, not the campaign.
+- Speed: a single Lighthouse lab run moves 10+ points between runs. v2 scores the median of 3 runs, and LCP/CLS from real Chrome users when Google has data for the URL; v1 still reads one run, as first written. This triples PageSpeed quota use.
 - Thresholds were set from CRO practice, not fitted. Three pages can't calibrate 22 signals.
