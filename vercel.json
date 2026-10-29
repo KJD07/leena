@@ -1,0 +1,5 @@
+{
+  "buildCommand": "mkdir -p public && cp src/ui.html public/index.html",
+  "outputDirectory": "public",
+  "functions": { "api/grade.js": { "maxDuration": 90 } }
+}

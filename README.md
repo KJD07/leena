@@ -57,6 +57,16 @@ npx wrangler secret put PSI_API_KEY
 npm run deploy
 ```
 
+## Deploy (Vercel)
+
+`api/meta.js` and `api/grade.js` wrap the same grader as Vercel Functions; `vercel.json` copies `src/ui.html` to `public/index.html` at build time. Vercel's CDN (`s-maxage=600`) stands in for the Worker's 10-minute cache.
+
+1. Import the repo at vercel.com → Add New → Project (framework preset: *Other*).
+2. Settings → Environment Variables: add `PSI_API_KEY` for Production and Preview, then redeploy.
+3. Check `https://<app>.vercel.app/api/meta` returns `"psiConfigured": true`.
+
+Or with the CLI: `vercel env add PSI_API_KEY production && vercel --prod`.
+
 ## Validate against conversion data
 
 The dataset is confidential, so it is not in this repo (`data/` and `reports/` are gitignored).
