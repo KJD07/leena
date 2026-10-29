@@ -10,3 +10,6 @@ compatibility_flags = ["nodejs_compat"]
 type = "Text"
 globs = ["**/*.html"]
 fallthrough = true
+
+# Required by `wrangler preview`, which Workers Builds runs for non-production branches
+[previews]
