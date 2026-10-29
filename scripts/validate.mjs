@@ -22,7 +22,7 @@ const rows = [];
 for (const p of pages) {
   process.stdout.write(`Grading ${p.url} ... `);
   const psi = psiKey ? await runPageSpeed(p.url, { apiKey: psiKey }) : { ok: false, reason: "No PSI_API_KEY set" };
-  const row = { ...p, psi: psi.ok ? { performance: psi.performance, lcpMs: psi.lcpMs, cls: psi.cls } : { error: psi.reason }, grades: {} };
+  const row = { ...p, psi: psi.ok ? { performance: psi.performance, lcpMs: psi.lcpMs, cls: psi.cls, median: psi.median, runs: psi.runs?.length, fieldLcpMs: psi.fieldLcpMs, fieldCls: psi.fieldCls } : { error: psi.reason }, grades: {} };
   for (const id of rubricIds) {
     const g = await gradeUrl(p.url, { rubric: id, psiResult: psi });
     row.grades[id] = {

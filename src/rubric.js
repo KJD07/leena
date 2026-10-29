@@ -259,7 +259,47 @@ const V2_SIGNALS = {
         : r(1, `"${f.learning.mainContentCta}" opens the content directly`);
     },
   },
+  // Change 4. With PageSpeed on, one Lighthouse run moved the HR page's performance between
+  // 0.38 and 0.50, enough to swap HR and the webinar. Speed is now read from the median of
+  // several lab runs, and LCP / CLS from real Chrome users (CrUX, p75 over 28 days) when Google
+  // has data for that URL: that is what visitors actually experienced.
+  psi_performance: {
+    category: "performance",
+    label: "Lighthouse performance (mobile, median of runs)",
+    score: (f, p, psi) => {
+      const v = psi?.median?.performance;
+      if (!psi?.ok || v == null) return r(null, psi?.reason || "PageSpeed data unavailable");
+      return r(rampUp(v, 0.25, 0.9), `Performance ${Math.round(v * 100)}/100, ${runSpread(psi, "performance", (x) => Math.round(x * 100))}`);
+    },
+  },
+  lcp: {
+    category: "performance",
+    label: "Largest Contentful Paint (real users when available)",
+    score: (f, p, psi) => {
+      if (!psi?.ok) return r(null, psi?.reason || "PageSpeed data unavailable");
+      if (psi.fieldLcpMs != null) return r(rampDown(psi.fieldLcpMs, 2500, 6000), `LCP ${fmt(psi.fieldLcpMs)} for real Chrome users (p75, 28 days; good ≤ 2.5s)`);
+      const v = psi.median?.lcpMs;
+      return v == null ? r(null, "LCP unavailable") : r(rampDown(v, 2500, 6000), `LCP ${fmt(v)} in the lab, ${runSpread(psi, "lcpMs", fmt)}; no real-user data for this URL`);
+    },
+  },
+  cls: {
+    category: "performance",
+    label: "Layout stability (CLS, real users when available)",
+    score: (f, p, psi) => {
+      if (!psi?.ok) return r(null, psi?.reason || "PageSpeed data unavailable");
+      if (psi.fieldCls != null) return r(rampDown(psi.fieldCls, 0.1, 0.4), `CLS ${psi.fieldCls.toFixed(2)} for real Chrome users (p75, 28 days; good ≤ 0.1)`);
+      const v = psi.median?.cls;
+      return v == null ? r(null, "CLS unavailable") : r(rampDown(v, 0.1, 0.4), `CLS ${v.toFixed(3)} in the lab, ${runSpread(psi, "cls", (x) => x.toFixed(3))}; no real-user data for this URL`);
+    },
+  },
 };
+
+// "median of 3 runs (38–50)", so the evidence shows how much the lab measurement moved
+function runSpread(psi, key, show) {
+  const vals = (psi.runs || []).map((x) => x[key]).filter((x) => x != null);
+  if (vals.length < 2) return "single run";
+  return `median of ${vals.length} runs (${show(Math.min(...vals))}–${show(Math.max(...vals))})`;
+}
 
 const V2 = {
   id: "v2",

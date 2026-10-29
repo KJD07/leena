@@ -1,4 +1,4 @@
-name = "landing-page-grader"
+name = "leena"
 main = "src/worker.js"
 compatibility_date = "2025-09-01"
 compatibility_flags = ["nodejs_compat"]
@@ -10,3 +10,6 @@ compatibility_flags = ["nodejs_compat"]
 type = "Text"
 globs = ["**/*.html"]
 fallthrough = true
+
+# Required by `wrangler preview`, which Workers Builds runs for non-production branches
+[previews]
